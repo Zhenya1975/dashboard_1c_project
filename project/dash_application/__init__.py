@@ -1,12 +1,11 @@
 import dash
-# import dash_core_components as dcc
-from dash import dcc
-# import dash_html_components as html
+from dash import dcc, callback_context, Input, Output, State
 from dash import html
 
 import dash_bootstrap_components as dbc
 # from flask_login.utils import login_required
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 
 from dash_bootstrap_templates import ThemeSwitchAIO
@@ -37,15 +36,39 @@ templates = [
 
 load_figure_template(templates)
 
+
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame(
-    {
-        "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-        "Amount": [4, 1, 2, 2, 4, 5],
-        "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
-    }
-)
+
+data_file = "'project/datafiles/next_payments_test_data.csv'"
+df_local = pd.read_csv('./datafiles/next_payments_test_data.csv')
+# print(df_local)
+
+url = 'https://drive.google.com/file/d/1DmH3A7I9eONqE2JZKLCCC_dGd3dmDbLO/view?usp=share_link'
+path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
+df = pd.read_csv(path)
+df["Дата получения платежа"] = pd.to_datetime(df["Дата получения платежа"], format="%Y-%m-%d")
+# print(df)
+df['date'] = df['Дата получения платежа']
+
+
+
+df['month'] = df.date.dt.month
+df['year'] = df.date.dt.year
+# print(df)
+
+monthly_expected_sales = df.groupby([df['year'], df['month'], df['Продукт']])['Сумма платежа'].sum()
+
+# monthly_expected_sales = df.groupby([(df.date.dt.year), (df.index.month)]).sum()
+# print(monthly_expected_sales)
+
+# df = pd.DataFrame(
+#     {
+#         "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+#         "Amount": [4, 1, 2, 2, 4, 5],
+#         "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
+#     }
+# )
 
 
 def create_dash_application(flask_app):
@@ -58,25 +81,66 @@ def create_dash_application(flask_app):
 
     dash_app.layout = html.Div(
         dbc.Container(
-        children=[
-            html.H1(children="Hello Dash"),
-            html.Div(
-                children="""
-            Dash: A web application framework for Python.
-        """
-            ),
-            dcc.Graph(
-                id="example-graph",
-                figure=px.bar(df, x="Fruit", y="Amount", color="City", barmode="group"),
-            ),
-        ],
+
+            [html.Div(style={'paddingLeft': '15px', 'paddingRight': '20px', 'paddingTop': '5px', 'paddingBottom': '5px',
+                             # 'color': 'white'
+                             },
+                      children=[
+                          dbc.Row([
+                              dbc.Col(width=12, children=[html.H3('DASHBOARD'), ]),
+                          ]),
+                          dcc.Input(
+                              id="dummy_input",
+                          ),
+                          dcc.Graph(
+                                  id="next_payments_graph",
+                                  # figure=px.histogram(df, x="date", y="Сумма платежа", color="Продукт", histfunc="sum")
+
+                              ),
+                      ]
+                      ),
+             ],
+
+        # children=[
+        #     html.H1(children="Hello Dash"),
+        #     html.Div(
+        #         children="""
+        #     Dash: A web application framework for Python.
+        # """
+        #     ),
+        #     dcc.Graph(
+        #         id="example-graph",
+        #         figure=px.bar(df, x="Fruit", y="Amount", color="City", barmode="group"),
+        #     ),
+        # ],
             fluid=False, className='custom_container')
     )
+
+
+
+
 
     # for view_function in dash_app.server.view_functions:
     #     if view_function.startswith(dash_app.config.url_base_pathname):
     #         dash_app.server.view_functions[view_function] = login_required(
     #             dash_app.server.view_functions[view_function]
     #         )
+    init_callbacks(dash_app)
 
     return dash_app
+
+
+def init_callbacks(dash_app):
+    @dash_app.callback([Output('next_payments_graph', 'figure'),
+                       ],
+                      [Input('dummy_input', 'value'),
+                       ])
+    def deals_tab(dummy_input):
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=df['date'],
+            y=df['Сумма платежа'],
+            # fill='tozeroy',
+            name='Стоимость ожиданий',
+        ))
+        return [fig]

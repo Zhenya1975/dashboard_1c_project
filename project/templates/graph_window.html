@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script>
+    {# dates_data_json = {{ dates_data | tojson }} #}
+    {# input = {{ input | tojson }} #}
+    var saved_data = {{ saved_data | tojson }}
+    // console.log(saved_data)
+    // Object.entries(dates_data_json).forEach((entry) => {
+    //   const [key, value] = entry;
+    //
+    //   // console.log(`${key}: ${value}`);
+    // });
+    // console.log(dates_data_json)
+
+
+  var day = [
+      // { x: Date.parse('2022-09-25 00:00:00 GMT+0800'), y: 10 },
+      // { x: Date.parse('2022-09-26 00:00:00 GMT+0800'), y: 8 },
+      // { x: Date.parse('2022-09-27 00:00:00 GMT+0800'), y: 13 },
+      { x: '2022-09-24 00:00:00', y: 13 },
+      { x: Date.parse('2022-09-25 00:00:00'), y: 10 },
+      { x: Date.parse('2022-09-26 14:00:00'), y: 8 },
+      { x: Date.parse('2022-09-27 00:00:00'), y: 13 },
+  ];
+    var input = [{"y":4,"x":"2017-01-01 00:00:00"},
+              {"y":0,"x":"2017-01-02 00:00:00"},
+              {"y":9,"x":"2017-01-03 00:00:00"},
+              {"y":0,"x":"2017-01-04 00:00:00"},
+              {"y":14,"x":"2017-01-05 00:00:00"}];
+
+
+
+ var day_2 = saved_data.map(function(item) {
+      return {x: new Date(item["x"]), y: item["y"]};
+ });
+
+  // var labels = [
+  //   'January',
+  //   'February',
+  //   'March',
+  //   'April',
+  //   'May',
+  //   'June',
+  // ];
+
+  var data = {
+    // labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: day_2
+    }]
+  };
+
+  var config = {
+    type: 'line',
+    data: data,
+    options: {
+        scales:{
+            x: {
+              type: 'time',
+              time: {
+                  unit: 'day'
+              }
+            },
+            y: {
+                beginAtZero: true
+            }
+        }
+
+    }
+  };
+</script>
+<script>
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+
+</body>
+</html>

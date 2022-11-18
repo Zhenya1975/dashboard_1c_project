@@ -119,43 +119,21 @@ def create_dash_application(flask_app):
                                   parent_className='custom-tabs',
                                   className='custom-tabs-container',
                                   children=[
+                                      tab_general_market_position.tab_general_market_position(),
                                       tab_temp,
 
-                                      tab_general_market_position.tab_general_market_position(),
+
                                       # tab_deal.deal_tab(),
                                       # tab_order.order_tab(),
 
                                   ]),
                           ]),
 
-
-                          dbc.Row([
-                              dbc.Col(width=3, children=[html.H3('DASHBOARD'), ]),
-                          ]),
-                          dcc.Input(
-                              id="dummy_input",
-                          ),
-                          dcc.Graph(
-                                  id="next_payments_graph",
-                                  # figure=px.histogram(df, x="date", y="Сумма платежа", color="Продукт", histfunc="sum")
-
-                              ),
                       ]
                       ),
              ],
 
-        # children=[
-        #     html.H1(children="Hello Dash"),
-        #     html.Div(
-        #         children="""
-        #     Dash: A web application framework for Python.
-        # """
-        #     ),
-        #     dcc.Graph(
-        #         id="example-graph",
-        #         figure=px.bar(df, x="Fruit", y="Amount", color="City", barmode="group"),
-        #     ),
-        # ],
+
             fluid=False, className='custom_container')
     )
 
@@ -179,18 +157,7 @@ def init_callbacks(dash_app):
                       [Input('dummy_input', 'value'),
                        ])
     def deals_tab(dummy_input):
-        # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
-        df = pd.DataFrame(dict(
-            date=["2020-01-10", "2020-01-10", "2020-02-10", "2020-02-10", "2020-04-10", "2020-05-10", "2020-06-10"],
-            sales=['one', 'two', 'one', 'two', 'two', 'two', 'two'],
-            value=[1, 2, 3, 0, 1, 2, 3]
-        ))
-        df1= pd.DataFrame(dict(
-            date=["2020-01-10", "2020-01-10", "2020-02-10", "2020-03-10", "2020-04-10", "2020-05-10", "2020-06-10"],
-            value=[4, 2, 12, 0, 1, 2, 3]
-        ))
-        # fig = px.histogram(df, x="Date", y="AAPL.Close", histfunc="avg", title="Histogram on Date Axes")
-        # fig = px.histogram(df, x="date", y="value", histfunc="sum", title="Histogram on Date Axes", color='sales', text_auto=True)
+
         fig = px.histogram(df_expected_sales, x="date", y="Сумма платежа", histfunc="sum", title="Ожидаемые поступления", color='Продукт',
                            text_auto=True)
 
@@ -214,9 +181,9 @@ def init_callbacks(dash_app):
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
+                y=-0.5,
+                xanchor="left",
+                x=0
             ),
             yaxis_title="Руб",
         )

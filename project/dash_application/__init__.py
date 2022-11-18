@@ -77,6 +77,25 @@ def create_dash_application(flask_app):
     )
     dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
 
+    # print(tab_general_market_position.tab_general_market_position())
+    tab_temp = dcc.Tab(
+        label='Tab one',
+        value='general_market_position_temp',
+        children=[
+            dcc.Graph(
+                figure={
+                    'data': [
+                        {'x': [1, 2, 3], 'y': [4, 1, 2],
+                            'type': 'bar', 'name': 'SF'},
+                        {'x': [1, 2, 3], 'y': [2, 4, 5],
+                         'type': 'bar', 'name': u'Montréal'},
+                    ]
+                }
+            )
+        ])
+    # print("tab_temp: ", tab_temp)
+    # print(tab_general_market_position.tab_general_market_position())
+
     dash_app.layout = html.Div(
         dbc.Container(
 
@@ -100,6 +119,8 @@ def create_dash_application(flask_app):
                                   parent_className='custom-tabs',
                                   className='custom-tabs-container',
                                   children=[
+                                      tab_temp,
+
                                       tab_general_market_position.tab_general_market_position(),
                                       # tab_deal.deal_tab(),
                                       # tab_order.order_tab(),

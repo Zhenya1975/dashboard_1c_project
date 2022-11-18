@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 def tab_general_market_position():
     tab_general_block = dcc.Tab(
         label='ПОЛОЖЕНИЕ КОМПАНИИ НА РЫНКЕ ЛИЗИНГА',
-        value='tab-general_market_position',
+        value='general_market_position',
         className='custom-tab',
         selected_className='custom-tab--selected',
         children=[
@@ -28,6 +28,7 @@ def tab_general_market_position():
                             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
                                             'paddingTop': '10px', 'color': 'white'},
                                      children=[
+                                         html.B('Бренды'),
 
 
                                      ]),

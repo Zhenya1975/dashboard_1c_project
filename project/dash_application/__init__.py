@@ -136,11 +136,56 @@ def init_callbacks(dash_app):
                       [Input('dummy_input', 'value'),
                        ])
     def deals_tab(dummy_input):
-        fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=df['date'],
-            y=df['Сумма платежа'],
-            # fill='tozeroy',
-            name='Стоимость ожиданий',
+        # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
+        df = pd.DataFrame(dict(
+            date=["2020-01-10", "2020-01-10", "2020-02-10", "2020-02-10", "2020-04-10", "2020-05-10", "2020-06-10"],
+            sales=['one', 'two', 'one', 'two', 'two', 'two', 'two'],
+            value=[1, 2, 3, 0, 1, 2, 3]
         ))
+        df1= pd.DataFrame(dict(
+            date=["2020-01-10", "2020-01-10", "2020-02-10", "2020-03-10", "2020-04-10", "2020-05-10", "2020-06-10"],
+            value=[4, 2, 12, 0, 1, 2, 3]
+        ))
+        # fig = px.histogram(df, x="Date", y="AAPL.Close", histfunc="avg", title="Histogram on Date Axes")
+        fig = px.histogram(df, x="date", y="value", histfunc="sum", title="Histogram on Date Axes", color='sales')
+        fig.update_traces(xbins_size="M1")
+        # fig.add_trace(go.Bar(
+        #         x=df1['date'],
+        #         y=df1['value'],
+        #         # fill='tozeroy',
+        #         name='Стоимость ожиданий',
+        #     ))
+
+        fig.update_xaxes(
+            # showgrid=True,
+            ticklabelmode="period",
+            dtick="M1",
+            # tickformat="%b\n%Y"
+        )
+        fig.update_layout(
+            barmode='stack',
+            bargap=0.2,
+        )
+
+
+        # print(df)
+        # print(df.info())
+        # fig = go.Figure()
+        # fig.add_trace(go.Bar(
+        #     x=df['date'],
+        #     y=df['Сумма платежа'],
+        #     # fill='tozeroy',
+        #     name='Стоимость ожиданий',
+        # ))
+        # fig.add_trace(go.Bar(
+        #     x=df['date'],
+        #     y=df['Сумма платежа'],
+        #     # fill='tozeroy',
+        #     name='Стоимость ожиданий',
+        # ))
+        # fig.update_traces(xbins_size="M1")
+
+
+
+
         return [fig]

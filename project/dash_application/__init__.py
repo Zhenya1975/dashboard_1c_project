@@ -1,15 +1,16 @@
 import dash
-from dash import dcc, callback_context, Input, Output, State
+from dash import dcc, Input, Output
 from dash import html
 
 import dash_bootstrap_components as dbc
 # from flask_login.utils import login_required
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
 
-from dash_bootstrap_templates import ThemeSwitchAIO
 from dash_bootstrap_templates import load_figure_template
+
+
+import dash_application.tab_general_market_position as tab_general_market_position
 
 
 # select the Bootstrap stylesheet2 and figure template2 for the theme toggle here:
@@ -36,28 +37,25 @@ templates = [
 
 load_figure_template(templates)
 
+########## DATA_FILES ##############
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-
-data_file = "'project/datafiles/next_payments_test_data.csv'"
-df_local = pd.read_csv('./datafiles/next_payments_test_data.csv')
+# df_local = pd.read_csv('./datafiles/next_payments_test_data.csv')
 # print(df_local)
 
-url = 'https://drive.google.com/file/d/1DmH3A7I9eONqE2JZKLCCC_dGd3dmDbLO/view?usp=share_link'
+# url = 'https://drive.google.com/file/d/1DmH3A7I9eONqE2JZKLCCC_dGd3dmDbLO/view?usp=share_link'
+url = 'https://drive.google.com/file/d/114FNn99SAQQsLB_-l0vItgs1Xj-6RtzQ/view?usp=share_link'
 path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
-df = pd.read_csv(path)
-df["Дата получения платежа"] = pd.to_datetime(df["Дата получения платежа"], format="%Y-%m-%d")
+df_expected_sales = pd.read_csv(path)
+df_expected_sales["Дата получения платежа"] = pd.to_datetime(df_expected_sales["Дата получения платежа"], format="%Y-%m-%d")
 # print(df)
-df['date'] = df['Дата получения платежа']
+df_expected_sales['date'] = df_expected_sales['Дата получения платежа']
 
 
+df_expected_sales['month'] = df_expected_sales.date.dt.month
+df_expected_sales['year'] = df_expected_sales.date.dt.year
+# print(df_expected_sales)
 
-df['month'] = df.date.dt.month
-df['year'] = df.date.dt.year
-# print(df)
-
-monthly_expected_sales = df.groupby([df['year'], df['month'], df['Продукт']])['Сумма платежа'].sum()
+# monthly_expected_sales = df_expected_sales.groupby([df_expected_sales['year'], df_expected_sales['month'], df_expected_sales['Продукт']])['Сумма платежа'].sum()
 
 # monthly_expected_sales = df.groupby([(df.date.dt.year), (df.index.month)]).sum()
 # print(monthly_expected_sales)
@@ -86,8 +84,32 @@ def create_dash_application(flask_app):
                              # 'color': 'white'
                              },
                       children=[
+                          # укладываем на всю ширину ряда заголовок
                           dbc.Row([
-                              dbc.Col(width=12, children=[html.H3('DASHBOARD'), ]),
+                              dbc.Col(
+                                  children=[
+                                      html.H3('DASHBOARD')
+                                  ]
+                              )
+                          ]),
+                          # добавляем следующий ряд, в который уложим табы
+                          html.Div([
+                              dcc.Tabs(
+                                  id="tabs-with-classes",
+                                  value='general_market_position',
+                                  parent_className='custom-tabs',
+                                  className='custom-tabs-container',
+                                  children=[
+                                      tab_general_market_position.tab_general_market_position(),
+                                      # tab_deal.deal_tab(),
+                                      # tab_order.order_tab(),
+
+                                  ]),
+                          ]),
+
+
+                          dbc.Row([
+                              dbc.Col(width=3, children=[html.H3('DASHBOARD'), ]),
                           ]),
                           dcc.Input(
                               id="dummy_input",
@@ -147,7 +169,10 @@ def init_callbacks(dash_app):
             value=[4, 2, 12, 0, 1, 2, 3]
         ))
         # fig = px.histogram(df, x="Date", y="AAPL.Close", histfunc="avg", title="Histogram on Date Axes")
-        fig = px.histogram(df, x="date", y="value", histfunc="sum", title="Histogram on Date Axes", color='sales')
+        # fig = px.histogram(df, x="date", y="value", histfunc="sum", title="Histogram on Date Axes", color='sales', text_auto=True)
+        fig = px.histogram(df_expected_sales, x="date", y="Сумма платежа", histfunc="sum", title="Ожидаемые поступления", color='Продукт',
+                           text_auto=True)
+
         fig.update_traces(xbins_size="M1")
         # fig.add_trace(go.Bar(
         #         x=df1['date'],
@@ -165,6 +190,14 @@ def init_callbacks(dash_app):
         fig.update_layout(
             barmode='stack',
             bargap=0.2,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            yaxis_title="Руб",
         )
 
 

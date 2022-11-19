@@ -39,13 +39,14 @@ load_figure_template(templates)
 
 ########## DATA_FILES ##############
 
-# df_local = pd.read_csv('./datafiles/next_payments_test_data.csv')
+df_local = pd.read_csv('./datafiles/next_payments_test_data_2.csv')
 # print(df_local)
 
 # url = 'https://drive.google.com/file/d/1DmH3A7I9eONqE2JZKLCCC_dGd3dmDbLO/view?usp=share_link'
-url = 'https://drive.google.com/file/d/114FNn99SAQQsLB_-l0vItgs1Xj-6RtzQ/view?usp=share_link'
-path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
-df_expected_sales = pd.read_csv(path)
+# url = 'https://drive.google.com/file/d/114FNn99SAQQsLB_-l0vItgs1Xj-6RtzQ/view?usp=share_link'
+# path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
+# df_expected_sales = pd.read_csv(path)
+df_expected_sales = df_local
 df_expected_sales["Дата получения платежа"] = pd.to_datetime(df_expected_sales["Дата получения платежа"], format="%Y-%m-%d")
 # print(df)
 df_expected_sales['date'] = df_expected_sales['Дата получения платежа']
@@ -153,15 +154,24 @@ def create_dash_application(flask_app):
 
 def init_callbacks(dash_app):
     @dash_app.callback([Output('next_payments_graph', 'figure'),
+                        Output('next_payments_by_types_graph', 'figure'),
                        ],
                       [Input('dummy_input', 'value'),
                        ])
     def deals_tab(dummy_input):
 
-        fig = px.histogram(df_expected_sales, x="date", y="Сумма платежа", histfunc="sum", title="Ожидаемые поступления", color='Продукт',
-                           text_auto=True)
+        fig = px.histogram(df_expected_sales,
+                           x="date",
+                           y="Сумма платежа",
+                           histfunc="sum",
+                           title="Платежи в разрезе продуктов",
+                           color='Продукт',
+                           text_auto=True
+                           )
 
-        fig.update_traces(xbins_size="M1")
+        fig.update_traces(
+            xbins_size="M1",
+        )
         # fig.add_trace(go.Bar(
         #         x=df1['date'],
         #         y=df1['value'],
@@ -177,7 +187,34 @@ def init_callbacks(dash_app):
         )
         fig.update_layout(
             barmode='stack',
-            bargap=0.2,
+            bargap=0.1,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="left",
+                x=0
+            ),
+            yaxis_title="Руб",
+        )
+
+        next_payments_by_types_fig = px.histogram(df_expected_sales,
+                           x="date",
+                           y="Сумма платежа",
+                           histfunc="sum",
+                           title="Платежи в разрезе типов",
+                           color='Тип имущества',
+                           text_auto=True
+                           )
+        next_payments_by_types_fig.update_xaxes(
+            # showgrid=True,
+            ticklabelmode="period",
+            dtick="M1",
+            # tickformat="%b\n%Y"
+        )
+        next_payments_by_types_fig.update_layout(
+            barmode='stack',
+            bargap=0.1,
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -209,4 +246,4 @@ def init_callbacks(dash_app):
 
 
 
-        return [fig]
+        return [fig, next_payments_by_types_fig]

@@ -10,6 +10,44 @@ def tab_general_market_position():
         className='custom-tab',
         selected_className='custom-tab--selected',
         children=[
+            # в верхнем блоке пусть будут фильтры
+            html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
+                            'marginTop': '10px',
+                            # 'color': 'white'
+                            },
+                     children=[
+                         dcc.Input(
+                             id="dummy_input",
+                         ),
+                     ]),
+            # в следующем блоке будут графики
+            html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
+                            'marginTop': '10px',
+                            # 'color': 'white'
+                            },
+                     children=[
+
+
+                         dbc.Row([
+                             dbc.Col(width=6,
+                                 children=[
+                                     dcc.Graph(
+                                         id="next_payments_graph",
+
+                                     ),
+                                 ]
+                             ),
+                             dbc.Col(width=6,
+                                 children=[
+                                     dcc.Graph(
+                                         id="next_payments_by_types_graph",
+
+                                     ),
+                                 ]
+                             ),
+
+                         ])
+                     ]),
 
 
             dbc.Row([
@@ -22,19 +60,16 @@ def tab_general_market_position():
                                      children=[
                                          html.P(),
                                          html.B('Фильтры'),
-                                         dcc.Input(
-                                             id="dummy_input",
-                                         ),
+
 
                                      ]
                                      ),
                         ]),
                 dbc.Col(width=9,
                         children=[
-                            dcc.Graph(
-                                id="next_payments_graph",
 
-                            ),
+
+
 
 
                         ])

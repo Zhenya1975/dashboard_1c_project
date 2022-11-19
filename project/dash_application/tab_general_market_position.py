@@ -50,31 +50,7 @@ def tab_general_market_position():
                      ]),
 
 
-            dbc.Row([
-                dbc.Col(width=3,
-                        children=[
-                            html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
-                                            'marginTop': '10px',
-                                            # 'color': 'white'
-                                            },
-                                     children=[
-                                         html.P(),
-                                         html.B('Фильтры'),
 
-
-                                     ]
-                                     ),
-                        ]),
-                dbc.Col(width=9,
-                        children=[
-
-
-
-
-
-                        ])
-
-            ])
         ]
     )
     return tab_general_block

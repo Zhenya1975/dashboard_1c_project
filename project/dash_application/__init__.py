@@ -54,7 +54,7 @@ df_expected_sales['date'] = df_expected_sales['Дата получения пл�
 
 df_expected_sales['month'] = df_expected_sales.date.dt.month
 df_expected_sales['year'] = df_expected_sales.date.dt.year
-# print(df_expected_sales)
+# print(df_expected_sales.info())
 
 # monthly_expected_sales = df_expected_sales.groupby([df_expected_sales['year'], df_expected_sales['month'], df_expected_sales['Продукт']])['Сумма платежа'].sum()
 
@@ -170,7 +170,12 @@ def init_callbacks(dash_app):
                            )
 
         fig.update_traces(
-            xbins_size="M1",
+            # xbins_size="M1",
+            xbins=dict(
+                # end='2016-12-31 12:00',
+                size='M1',
+                # start='1983-12-31 12:00'
+            )
         )
         # fig.add_trace(go.Bar(
         #         x=df1['date'],
@@ -206,14 +211,23 @@ def init_callbacks(dash_app):
                            color='Тип имущества',
                            text_auto=True
                            )
+
+        next_payments_by_types_fig.update_traces(
+            # xbins_size="M1",
+            xbins=dict(
+                # end='2016-12-31 12:00',
+                size='M1',
+                # start='1983-12-31 12:00'
+            )
+        )
         next_payments_by_types_fig.update_xaxes(
             # showgrid=True,
             ticklabelmode="period",
             dtick="M1",
-            # tickformat="%b\n%Y"
+            tickformat="%b\n%Y"
         )
         next_payments_by_types_fig.update_layout(
-            barmode='stack',
+            # barmode='stack',
             bargap=0.1,
             legend=dict(
                 orientation="h",

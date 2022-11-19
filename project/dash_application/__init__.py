@@ -135,7 +135,9 @@ def create_dash_application(flask_app):
              ],
 
 
-            fluid=False, className='custom_container')
+            # fluid=False,
+            # className='custom_container'
+        )
     )
 
 
@@ -166,7 +168,8 @@ def init_callbacks(dash_app):
                            histfunc="sum",
                            title="Платежи в разрезе продуктов",
                            color='Продукт',
-                           text_auto=True
+                           # text_auto=True
+                           text_auto='.3s'
                            )
 
         fig.update_traces(
@@ -209,7 +212,7 @@ def init_callbacks(dash_app):
                            histfunc="sum",
                            title="Платежи в разрезе типов",
                            color='Тип имущества',
-                           text_auto=True
+                           text_auto='.3s'
                            )
 
         next_payments_by_types_fig.update_traces(

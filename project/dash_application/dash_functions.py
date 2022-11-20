@@ -13,12 +13,26 @@ def sales_data_source():
 def prepare_df_from_csv(file_path):
     df = pd.read_csv(file_path)
     # df = pd.read_csv('project/datafiles/next_payments_test_data.csv')
-    print(df)
+    # print(df)
+
+def selector_content_list(input_from_select, full_selector_list):
+    """принимает то, что мы взяли из селекта и список полных значений этого селекта. И отдает результат в виде списка значение селекта"""
+    result_select_list = []
+    if input_from_select == None:
+        result_select_list = full_selector_list
+
+    elif len(input_from_select) == 0:
+        result_select_list = full_selector_list
+
+    elif len(input_from_select) > 0:
+        result_select_list = input_from_select
+    else:
+        print("что-то странное в функции selector_content")
+    return result_select_list
 
 # выпекаем датафрейм, который отдаст накопленный результат продаж 2022 года
 def actual_2022_sales(product_select):
-    print(product_select)
-
+    """расчет df для графика План-факт, ряд с фактическими продажами"""
 
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
@@ -33,36 +47,18 @@ def actual_2022_sales(product_select):
                                                     ]
 
     full_product_list = product_select_full_list()
-    product_select_list = []
-    if product_select == None:
-        product_select_list = full_product_list
-
-    elif len(product_select) == 0:
-        product_select_list = full_product_list
-
-    elif len(product_select) > 0:
-        product_select_list = product_select
-    else:
-        print("что-то странное")
-
-    try:
-        print("len(product_select): ", len(product_select))
-    except:
-        pass
-
+    product_select_list = selector_content_list(product_select, full_product_list)
 
     sales_data_2022_till_now_filtered_df = sales_data_2022_till_now_df.loc[
             sales_data_2022_till_now_df['Продукт'].isin(product_select_list)
         ]
-
-
 
     sales_data_2022_till_now_df=sales_data_2022_till_now_filtered_df
     sales_data_2022_till_now_df['payment_cum'] = sales_data_2022_till_now_df['payment'].cumsum()
     # print(sales_data_2022_till_now_df)
     return sales_data_2022_till_now_df
 
-def expected_2022_sales():
+def expected_2022_sales(product_select):
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
                                                              format="%Y-%m-%d")

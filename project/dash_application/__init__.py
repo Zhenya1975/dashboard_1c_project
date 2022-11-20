@@ -281,7 +281,7 @@ def init_callbacks(dash_app):
         )
 
         # Добавляем ряд с ожидаемыми платежами
-        expected_payments_plan_fact_df = dash_functions.expected_2022_sales()
+        expected_payments_plan_fact_df = dash_functions.expected_2022_sales(product_select)
         x_expected = expected_payments_plan_fact_df.loc[:, 'date']
         y_expected = expected_payments_plan_fact_df.loc[:, 'payment_cum']
 

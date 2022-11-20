@@ -140,7 +140,7 @@ def create_dash_application(flask_app):
              ],
 
 
-            fluid=False,
+            fluid=True,
             # className='custom_container'
         )
     )

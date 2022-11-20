@@ -1,7 +1,9 @@
 import datetime
-
+import random
+from datetime import date, timedelta
 import pandas as pd
 from pathlib import Path
+import json
 
 project_folder = Path(__file__).resolve().parent.parent
 # print(project_folder)
@@ -134,6 +136,45 @@ def product_select_full_list():
 
     return product_categories_list
 
-# def sales_plan_2022():
-#     """расчет плана продаж."""
+def daterange(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+def sales_plan_2022(product_select):
+    """Расчет плана продаж."""
+    # получаем диапазон дат в 2022 году
+    start_date = date(2022, 1, 1)
+    end_date = date(2022, 12, 31)
+
+    result_json_path = datafiles_path + '/plan_by_products.json'
+    with open(result_json_path, 'r') as openfile:
+        plan_data_saved = json.load(openfile)
+
+    # Получаем значение плана для выборки. с учетом примененного фильтра по продуктам
+
+
+    full_product_list = product_select_full_list()
+    product_select_list = selector_content_list(product_select, full_product_list) # список продуктов с учетом фильтра
+    filtered_product_plan_data = {}
+    plan_sum_payment = 0
+    for key, value in plan_data_saved.items():
+        if key in product_select_list:
+            filtered_product_plan_data['product'] = key
+            filtered_product_plan_data['plan_value'] = value
+            plan_sum_payment = plan_sum_payment + value
+
+    plan_data_result_list = []
+    for single_date in daterange(start_date, end_date):
+        temp_dict = {}
+        temp_dict['date'] = single_date
+        temp_dict['plan'] = plan_sum_payment
+        plan_data_result_list.append(temp_dict)
+
+    plan_data_df = pd.DataFrame(plan_data_result_list)
+
+
+    return plan_data_df
+
+
+
+
 

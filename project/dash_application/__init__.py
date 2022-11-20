@@ -293,5 +293,17 @@ def init_callbacks(dash_app):
 
         ))
 
+        # Добавляем ряд с планом продаж
+        plan_data_df = dash_functions.sales_plan_2022(product_select)
+        x_plan = plan_data_df['date']
+        y_plan = plan_data_df['plan']
+        payments_plan_fact_cumsum_fig.add_trace(go.Scatter(
+            x=x_plan,
+            y=y_plan,
+            name='План поступлений, руб',
+
+        ))
+
+
 
         return [fig, next_payments_by_types_fig, payments_plan_fact_cumsum_fig]

@@ -54,7 +54,7 @@ def plan_data_prepare_func():
         product_category_plan_2022[product_category] = product_category_2022_plan
 
     result_json_path = datafiles_path + '/plan_by_products.json'
-    print(result_json_path)
+    # print(result_json_path)
     with open(result_json_path, "w") as jsonFile:
         json.dump(product_category_plan_2022, jsonFile, ensure_ascii=False)
 
@@ -62,4 +62,4 @@ def plan_data_prepare_func():
 
     # создаем
 
-plan_data_prepare_func()
+# plan_data_prepare_func()

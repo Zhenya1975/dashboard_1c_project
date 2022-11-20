@@ -257,11 +257,12 @@ def init_callbacks(dash_app):
         payments_plan_fact_df = dash_functions.actual_2022_sales()
         x = payments_plan_fact_df.loc[:, 'date']
         y = payments_plan_fact_df.loc[:, 'payment_cum']
+
         payments_plan_fact_cumsum_fig.add_trace(go.Scatter(
             x=x,
             y=y,
             fill='tozeroy',
-            name='Факт продаж, ед',
+            name='Факт продаж, руб',
 
         ))
         payments_plan_fact_cumsum_fig.update_xaxes(
@@ -273,8 +274,22 @@ def init_callbacks(dash_app):
         payments_plan_fact_cumsum_fig.update_layout(
             template='seaborn',
             title="Платежи. План-факт",
+            # title={'text': 'План-факт продаж в 2021 году', 'font': {'color': 'white'}, 'x': 0.5}
+            xaxis={'range':['2022-1-1', '2023-1-1']},
         )
 
+        # Добавляем ряд с ожидаемыми платежами
+        expected_payments_plan_fact_df = dash_functions.expected_2022_sales()
+        x_expected = expected_payments_plan_fact_df.loc[:, 'date']
+        y_expected = expected_payments_plan_fact_df.loc[:, 'payment_cum']
+
+        payments_plan_fact_cumsum_fig.add_trace(go.Scatter(
+            x=x_expected,
+            y=y_expected,
+            fill='tozeroy',
+            name='Ожидаемые поступления, руб',
+
+        ))
 
 
         return [fig, next_payments_by_types_fig, payments_plan_fact_cumsum_fig]

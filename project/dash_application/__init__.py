@@ -252,23 +252,7 @@ def init_callbacks(dash_app):
             yaxis_title="Руб",
         )
 
-
-        # print(df)
-        # print(df.info())
-        # fig = go.Figure()
-        # fig.add_trace(go.Bar(
-        #     x=df['date'],
-        #     y=df['Сумма платежа'],
-        #     # fill='tozeroy',
-        #     name='Стоимость ожиданий',
-        # ))
-        # fig.add_trace(go.Bar(
-        #     x=df['date'],
-        #     y=df['Сумма платежа'],
-        #     # fill='tozeroy',
-        #     name='Стоимость ожиданий',
-        # ))
-        # fig.update_traces(xbins_size="M1")
+        ####### ГРАФИК ПЛАН-ФАКТ ########################
         payments_plan_fact_cumsum_fig = go.Figure()
         payments_plan_fact_df = dash_functions.actual_2022_sales()
         x = payments_plan_fact_df.loc[:, 'date']
@@ -278,12 +262,17 @@ def init_callbacks(dash_app):
             y=y,
             fill='tozeroy',
             name='Факт продаж, ед',
+
         ))
         payments_plan_fact_cumsum_fig.update_xaxes(
             # showgrid=True,
             # ticklabelmode="period",
             # dtick="M1",
             tickformat="%b\n%Y"
+        )
+        payments_plan_fact_cumsum_fig.update_layout(
+            template='seaborn',
+            title="Платежи. План-факт",
         )
 
 

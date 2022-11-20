@@ -44,7 +44,7 @@ load_figure_template(templates)
 ########## DATA_FILES ##############
 
 df_local = pd.read_csv('./datafiles/next_payments_test_data_2.csv')
-# print(df_local)
+
 
 # url = 'https://drive.google.com/file/d/1DmH3A7I9eONqE2JZKLCCC_dGd3dmDbLO/view?usp=share_link'
 # url = 'https://drive.google.com/file/d/114FNn99SAQQsLB_-l0vItgs1Xj-6RtzQ/view?usp=share_link'
@@ -52,21 +52,21 @@ df_local = pd.read_csv('./datafiles/next_payments_test_data_2.csv')
 # df_expected_sales = pd.read_csv(path)
 df_expected_sales = df_local
 df_expected_sales["Дата получения платежа"] = pd.to_datetime(df_expected_sales["Дата получения платежа"], format="%Y-%m-%d")
-# print(df)
+
 df_expected_sales['date'] = df_expected_sales['Дата получения платежа']
 today = datetime.datetime.now()
 df_expected_sales = df_expected_sales.loc[df_expected_sales['date']>today]
-# print(df_expected_sales)
+
 
 df_expected_sales = df_expected_sales.copy()
 df_expected_sales['month'] = df_expected_sales.date.dt.month
 df_expected_sales['year'] = df_expected_sales.date.dt.year
-# print(df_expected_sales.info())
+
 
 # monthly_expected_sales = df_expected_sales.groupby([df_expected_sales['year'], df_expected_sales['month'], df_expected_sales['Продукт']])['Сумма платежа'].sum()
 
 # monthly_expected_sales = df.groupby([(df.date.dt.year), (df.index.month)]).sum()
-# print(monthly_expected_sales)
+
 
 # df = pd.DataFrame(
 #     {
@@ -85,7 +85,7 @@ def create_dash_application(flask_app):
     )
     dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
 
-    # print(tab_general_market_position.tab_general_market_position())
+
     tab_temp = dcc.Tab(
         label='Tab one',
         value='general_market_position_temp',
@@ -101,8 +101,7 @@ def create_dash_application(flask_app):
                 }
             )
         ])
-    # print("tab_temp: ", tab_temp)
-    # print(tab_general_market_position.tab_general_market_position())
+
 
     dash_app.layout = html.Div(
         dbc.Container(
@@ -166,9 +165,12 @@ def init_callbacks(dash_app):
                         Output('next_payments_by_types_graph', 'figure'),
                         Output('payments_plan_fact_cumsum_graph', 'figure'),
                        ],
-                      [Input('dummy_input', 'value'),
+                      [Input('product_select', 'value'),
                        ])
-    def deals_tab(dummy_input):
+    def deals_tab(product_select):
+
+        # Обработчик инпута по продуктам
+        actual_sales_2022_df = dash_functions.actual_2022_sales(product_select)
 
         fig = px.histogram(df_expected_sales,
                            x="date",
@@ -254,7 +256,7 @@ def init_callbacks(dash_app):
 
         ####### ГРАФИК ПЛАН-ФАКТ ########################
         payments_plan_fact_cumsum_fig = go.Figure()
-        payments_plan_fact_df = dash_functions.actual_2022_sales()
+        payments_plan_fact_df = dash_functions.actual_2022_sales(product_select)
         x = payments_plan_fact_df.loc[:, 'date']
         y = payments_plan_fact_df.loc[:, 'payment_cum']
 

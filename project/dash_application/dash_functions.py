@@ -16,7 +16,10 @@ def prepare_df_from_csv(file_path):
     print(df)
 
 # выпекаем датафрейм, который отдаст накопленный результат продаж 2022 года
-def actual_2022_sales():
+def actual_2022_sales(product_select):
+    print(product_select)
+
+
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
                                                                  format="%Y-%m-%d")
@@ -28,7 +31,33 @@ def actual_2022_sales():
     sales_data_2022_till_now_df = sales_data_df.loc[(sales_data_df['date'] >= first_day_2022) &
                                                     (sales_data_df['date'] <= today)
                                                     ]
-    sales_data_2022_till_now_df=sales_data_2022_till_now_df.copy()
+
+    full_product_list = product_select_full_list()
+    product_select_list = []
+    if product_select == None:
+        product_select_list = full_product_list
+
+    elif len(product_select) == 0:
+        product_select_list = full_product_list
+
+    elif len(product_select) > 0:
+        product_select_list = product_select
+    else:
+        print("что-то странное")
+
+    try:
+        print("len(product_select): ", len(product_select))
+    except:
+        pass
+
+
+    sales_data_2022_till_now_filtered_df = sales_data_2022_till_now_df.loc[
+            sales_data_2022_till_now_df['Продукт'].isin(product_select_list)
+        ]
+
+
+
+    sales_data_2022_till_now_df=sales_data_2022_till_now_filtered_df
     sales_data_2022_till_now_df['payment_cum'] = sales_data_2022_till_now_df['payment'].cumsum()
     # print(sales_data_2022_till_now_df)
     return sales_data_2022_till_now_df
@@ -60,8 +89,44 @@ def expected_2022_sales():
     sales_data_2022_till_now_for_cumsum_df = pd.concat([start_df_for_cumsum_df, sales_data_2022_till_now_df], axis=0, ignore_index=True)
     # добавляем колонку с накоплением
     sales_data_2022_till_now_for_cumsum_df['payment_cum'] = sales_data_2022_till_now_for_cumsum_df['payment'].cumsum()
-    print(sales_data_2022_till_now_for_cumsum_df)
+
     return sales_data_2022_till_now_for_cumsum_df
 
 
-# expected_2022_sales()
+def product_select_content():
+    sales_data_df = sales_data_source()
+    sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
+                                                             format="%Y-%m-%d")
+    sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
+    sales_data_df['date'] = sales_data_df['Дата получения платежа']
+    sales_data_df['payment'] = sales_data_df['Сумма платежа']
+    # получаем список уникальных значений продуктовых категорий
+    product_categories = sales_data_df['Продукт'].unique()
+    product_categories_options = []
+    for product in product_categories:
+        temp_dict = {}
+        temp_dict['label'] = product
+        temp_dict['value'] = product
+        product_categories_options.append(temp_dict)
+
+    return product_categories_options
+
+
+
+def product_select_full_list():
+    sales_data_df = sales_data_source()
+    sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
+                                                             format="%Y-%m-%d")
+    sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
+    sales_data_df['date'] = sales_data_df['Дата получения платежа']
+    sales_data_df['payment'] = sales_data_df['Сумма платежа']
+    # получаем список уникальных значений продуктовых категорий
+    product_categories = sales_data_df['Продукт'].unique()
+    product_categories_list = []
+    for product in product_categories:
+        product_categories_list.append(product)
+
+    return product_categories_list
+
+# def sales_plan_2022():
+    # """расчет плана продаж."""

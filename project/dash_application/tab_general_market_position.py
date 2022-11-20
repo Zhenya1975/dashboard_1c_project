@@ -1,6 +1,9 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
+import dash_application.dash_functions as dash_functions
+
+product_categories_options = dash_functions.product_select_content()
 
 
 def tab_general_market_position():
@@ -16,9 +19,21 @@ def tab_general_market_position():
                             # 'color': 'white'
                             },
                      children=[
-                         dcc.Input(
-                             id="dummy_input",
+                         dbc.Row(
+                             dbc.Col(width=3,
+                                 children=[
+                                     dcc.Dropdown(
+
+                                         options = product_categories_options,
+                                         # value='Montreal',
+                                         multi=True,
+                                         placeholder="Продукт...",
+                                         id='product_select'
+                                     )
+                                 ]
+                             )
                          ),
+
                      ]),
             # в следующем блоке будут графики
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',

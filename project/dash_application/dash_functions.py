@@ -135,4 +135,5 @@ def product_select_full_list():
     return product_categories_list
 
 # def sales_plan_2022():
-    # """расчет плана продаж."""
+#     """расчет плана продаж."""
+

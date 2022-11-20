@@ -7,6 +7,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 # from flask_login.utils import login_required
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 
 from dash_bootstrap_templates import load_figure_template
@@ -163,6 +164,7 @@ def create_dash_application(flask_app):
 def init_callbacks(dash_app):
     @dash_app.callback([Output('next_payments_graph', 'figure'),
                         Output('next_payments_by_types_graph', 'figure'),
+                        Output('payments_plan_fact_cumsum_graph', 'figure'),
                        ],
                       [Input('dummy_input', 'value'),
                        ])
@@ -267,8 +269,23 @@ def init_callbacks(dash_app):
         #     name='Стоимость ожиданий',
         # ))
         # fig.update_traces(xbins_size="M1")
+        payments_plan_fact_cumsum_fig = go.Figure()
+        payments_plan_fact_df = dash_functions.actual_2022_sales()
+        x = payments_plan_fact_df.loc[:, 'date']
+        y = payments_plan_fact_df.loc[:, 'payment_cum']
+        payments_plan_fact_cumsum_fig.add_trace(go.Scatter(
+            x=x,
+            y=y,
+            fill='tozeroy',
+            name='Факт продаж, ед',
+        ))
+        payments_plan_fact_cumsum_fig.update_xaxes(
+            # showgrid=True,
+            # ticklabelmode="period",
+            # dtick="M1",
+            tickformat="%b\n%Y"
+        )
 
 
 
-
-        return [fig, next_payments_by_types_fig]
+        return [fig, next_payments_by_types_fig, payments_plan_fact_cumsum_fig]

@@ -30,6 +30,7 @@ def actual_2022_sales():
                                                     ]
     sales_data_2022_till_now_df=sales_data_2022_till_now_df.copy()
     sales_data_2022_till_now_df['payment_cum'] = sales_data_2022_till_now_df['payment'].cumsum()
-    print(sales_data_2022_till_now_df)
+    # print(sales_data_2022_till_now_df)
+    return sales_data_2022_till_now_df
 
-actual_2022_sales()
+# actual_2022_sales()

@@ -26,10 +26,33 @@ def tab_general_market_position():
                             # 'color': 'white'
                             },
                      children=[
+                         dbc.Row([
+                             dbc.Col(
+                                     children=[
+                                         dcc.Graph(id="payments_plan_fact_cumsum_graph",),
+
+                                     ])
+                         ]),
+
+                         # dbc.Row([
+                         #     dbc.Col(
+                         #             children=[
+                         #                 dcc.Graph(id="next_payments_graph",),
+                         #
+                         #             ])
+                         # ]),
+                         # dbc.Row([
+                         #     dbc.Col(
+                         #         children=[
+                         #             dcc.Graph(id="next_payments_by_types_graph",),
+                         #
+                         #         ])
+                         # ]),
 
 
                          dbc.Row([
-                             dbc.Col(width=6,
+                             dbc.Col(
+                                 # width=6,
                                  children=[
                                      dcc.Graph(
                                          id="next_payments_graph",
@@ -37,7 +60,8 @@ def tab_general_market_position():
                                      ),
                                  ]
                              ),
-                             dbc.Col(width=6,
+                             dbc.Col(
+                                 # width=6,
                                  children=[
                                      dcc.Graph(
                                          id="next_payments_by_types_graph",

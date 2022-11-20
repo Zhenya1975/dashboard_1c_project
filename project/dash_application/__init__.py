@@ -1,3 +1,5 @@
+import datetime
+
 import dash
 from dash import dcc, Input, Output
 from dash import html
@@ -50,8 +52,11 @@ df_expected_sales = df_local
 df_expected_sales["Дата получения платежа"] = pd.to_datetime(df_expected_sales["Дата получения платежа"], format="%Y-%m-%d")
 # print(df)
 df_expected_sales['date'] = df_expected_sales['Дата получения платежа']
+today = datetime.datetime.now()
+df_expected_sales = df_expected_sales.loc[df_expected_sales['date']>today]
+# print(df_expected_sales)
 
-
+df_expected_sales = df_expected_sales.copy()
 df_expected_sales['month'] = df_expected_sales.date.dt.month
 df_expected_sales['year'] = df_expected_sales.date.dt.year
 # print(df_expected_sales.info())
@@ -135,7 +140,7 @@ def create_dash_application(flask_app):
              ],
 
 
-            # fluid=False,
+            fluid=False,
             # className='custom_container'
         )
     )
@@ -191,15 +196,16 @@ def init_callbacks(dash_app):
             # showgrid=True,
             ticklabelmode="period",
             dtick="M1",
-            # tickformat="%b\n%Y"
+            tickformat="%b\n%Y"
         )
         fig.update_layout(
+            template = 'seaborn',
             barmode='stack',
             bargap=0.1,
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
-                y=-0.5,
+                y=-1.2,
                 xanchor="left",
                 x=0
             ),
@@ -230,14 +236,15 @@ def init_callbacks(dash_app):
             tickformat="%b\n%Y"
         )
         next_payments_by_types_fig.update_layout(
+            template = 'seaborn',
             # barmode='stack',
             bargap=0.1,
             legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=-0.5,
-                xanchor="left",
-                x=0
+                # orientation="h",
+                # yanchor="bottom",
+                # y=-0.5,
+                # xanchor="left",
+                # x=0
             ),
             yaxis_title="Руб",
         )

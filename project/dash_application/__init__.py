@@ -165,6 +165,7 @@ def init_callbacks(dash_app):
     @dash_app.callback([Output('next_payments_graph', 'figure'),
                         Output('next_payments_by_types_graph', 'figure'),
                         Output('payments_plan_fact_cumsum_graph', 'figure'),
+                        Output('payments_fact_donat_by_types_graph', 'figure'),
                        ],
                       [Input('product_select', 'value'),
                        ])
@@ -205,7 +206,8 @@ def init_callbacks(dash_app):
             tickformat="%b\n%Y"
         )
         fig.update_layout(
-            template = 'seaborn',
+            paper_bgcolor='WhiteSmoke',
+            template='seaborn',
             barmode='stack',
             bargap=0.1,
             legend=dict(
@@ -242,8 +244,8 @@ def init_callbacks(dash_app):
             tickformat="%b\n%Y"
         )
         next_payments_by_types_fig.update_layout(
-            template = 'seaborn',
-            # barmode='stack',
+            paper_bgcolor='WhiteSmoke',
+            template='seaborn',
             bargap=0.1,
             legend=dict(
                 # orientation="h",
@@ -280,6 +282,13 @@ def init_callbacks(dash_app):
             title="Платежи. План-факт",
             # title={'text': 'План-факт продаж в 2021 году', 'font': {'color': 'white'}, 'x': 0.5}
             xaxis={'range':['2022-1-1', '2023-1-1']},
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="left",
+                x=0
+            ),
         )
 
         # Добавляем ряд с ожидаемыми платежами
@@ -306,6 +315,26 @@ def init_callbacks(dash_app):
 
         ))
 
+        ######## График pie_chart c данными факт на сегодня в разрезе типов #############
+        labels = ['Oxygen', 'Hydrogen', 'Carbon_Dioxide', 'Nitrogen']
+        values = [4500, 2500, 1053, 500]
+
+        fig_pie_fact_by_types = go.Figure(data=[go.Pie(labels=labels, values=values)])
+
+        fig_pie_fact_by_types.update_layout(
+            paper_bgcolor='WhiteSmoke',
+            template='seaborn',
+            title="Факт по типам",
+            # title={'text': 'План-факт продаж в 2021 году', 'font': {'color': 'white'}, 'x': 0.5}
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="left",
+                x=0
+            ),
+        )
 
 
-        return [fig, next_payments_by_types_fig, payments_plan_fact_cumsum_fig]
+
+        return [fig, next_payments_by_types_fig, payments_plan_fact_cumsum_fig, fig_pie_fact_by_types]

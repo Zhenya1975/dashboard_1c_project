@@ -75,12 +75,18 @@ def tab_general_market_position():
                             },
                      children=[
                          dbc.Row([
-                             dbc.Col(
+                             dbc.Col(width=8,
                                      children=[
                                          dcc.Graph(id="payments_plan_fact_cumsum_graph",),
 
+                                     ]),
+                             dbc.Col(width=4,
+                                     children=[
+                                         dcc.Graph(id="payments_fact_donat_by_types_graph"),
+
                                      ])
                          ]),
+
 
                          # dbc.Row([
                          #     dbc.Col(
@@ -96,29 +102,35 @@ def tab_general_market_position():
                          #
                          #         ])
                          # ]),
+                         html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
+                                         'marginTop': '10px',
+                                         # 'color': 'white'
+                                         },
+                                  children=[
+                                      dbc.Row([
+                                          dbc.Col(
+                                              # width=6,
+                                              children=[
+                                                  dcc.Graph(
+                                                      id="next_payments_graph",
 
+                                                  ),
+                                              ]
+                                          ),
+                                          dbc.Col(
+                                              # width=6,
+                                              children=[
+                                                  dcc.Graph(
+                                                      id="next_payments_by_types_graph",
 
-                         dbc.Row([
-                             dbc.Col(
-                                 # width=6,
-                                 children=[
-                                     dcc.Graph(
-                                         id="next_payments_graph",
+                                                  ),
+                                              ]
+                                          ),
 
-                                     ),
-                                 ]
-                             ),
-                             dbc.Col(
-                                 # width=6,
-                                 children=[
-                                     dcc.Graph(
-                                         id="next_payments_by_types_graph",
+                                      ])
 
-                                     ),
-                                 ]
-                             ),
+                                  ]),
 
-                         ])
                      ]),
 
 

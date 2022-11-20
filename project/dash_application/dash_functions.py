@@ -176,5 +176,12 @@ def sales_plan_2022(product_select):
 
 
 
+def donut_fact_2022_data():
+    sales_data_df = sales_data_source()
+    sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
+                                                             format="%Y-%m-%d")
+    sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
+    sales_data_df['date'] = sales_data_df['Дата получения платежа']
+    sales_data_df['payment'] = sales_data_df['Сумма платежа']
 
 

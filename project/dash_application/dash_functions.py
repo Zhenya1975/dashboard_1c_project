@@ -66,14 +66,23 @@ def expected_2022_sales(product_select):
     sales_data_df['date'] = sales_data_df['Дата получения платежа']
     sales_data_df['payment'] = sales_data_df['Сумма платежа']
     today = datetime.datetime.now()
+
+
     last_day_2022 = datetime.datetime(2022, 12, 31)
+
+    full_product_list = product_select_full_list()
+    product_select_list = selector_content_list(product_select, full_product_list)
+
     expected_sales_data_df = sales_data_df.loc[(sales_data_df['date'] >= today) &
-                                                    (sales_data_df['date'] <= last_day_2022)
-                                                    ]
+                                               (sales_data_df['date'] <= last_day_2022) &
+                                               (sales_data_df['Продукт'].isin(product_select_list))
+                                               ]
+
     # получаем текущую накопленную сумму с 1 января по сегодня
     first_day_2022 = datetime.datetime(2022, 1, 1)
     sales_data_2022_till_now_df = sales_data_df.loc[(sales_data_df['date'] >= first_day_2022) &
-                                                    (sales_data_df['date'] <= today)
+                                                    (sales_data_df['date'] <= today) &
+                                                    (sales_data_df['Продукт'].isin(product_select_list))
                                                     ]
 
     current_sales_total = sales_data_2022_till_now_df['payment'].sum()
@@ -85,6 +94,7 @@ def expected_2022_sales(product_select):
     sales_data_2022_till_now_for_cumsum_df = pd.concat([start_df_for_cumsum_df, sales_data_2022_till_now_df], axis=0, ignore_index=True)
     # добавляем колонку с накоплением
     sales_data_2022_till_now_for_cumsum_df['payment_cum'] = sales_data_2022_till_now_for_cumsum_df['payment'].cumsum()
+    # print(sales_data_2022_till_now_for_cumsum_df)
 
     return sales_data_2022_till_now_for_cumsum_df
 

@@ -275,6 +275,7 @@ def init_callbacks(dash_app):
             tickformat="%b\n%Y"
         )
         payments_plan_fact_cumsum_fig.update_layout(
+            paper_bgcolor='WhiteSmoke',
             template='seaborn',
             title="Платежи. План-факт",
             # title={'text': 'План-факт продаж в 2021 году', 'font': {'color': 'white'}, 'x': 0.5}

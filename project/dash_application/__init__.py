@@ -14,7 +14,7 @@ from dash_bootstrap_templates import load_figure_template
 
 import dash_application.tab_general_market_position as tab_general_market_position
 import dash_application.dash_functions as dash_functions
-# dash_functions.prepare_df_from_csv('/Users/zupanikevgenij/pycharm_projects/dashboard_1c_project/project/datafiles/next_payments_test_data_2.csv')
+
 
 # select the Bootstrap stylesheet2 and figure template2 for the theme toggle here:
 # template_theme1 = "sketchy"
@@ -204,11 +204,11 @@ def init_callbacks(dash_app):
             barmode='stack',
             bargap=0.1,
             legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=-1.2,
-                xanchor="left",
-                x=0
+                # orientation="h",
+                # yanchor="bottom",
+                # y=-1.2,
+                # xanchor="left",
+                # x=0
             ),
             yaxis_title="Руб",
         )

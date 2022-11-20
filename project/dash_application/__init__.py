@@ -142,6 +142,7 @@ def create_dash_application(flask_app):
 
 
             fluid=True,
+            className="dbc"
             # className='custom_container'
         )
     )

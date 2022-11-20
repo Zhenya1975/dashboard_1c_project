@@ -13,7 +13,7 @@ def tab_general_market_position():
         className='custom-tab',
         selected_className='custom-tab--selected',
         children=[
-            # в верхнем блоке пусть будут фильтры
+            # в верхнем - фильтры
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
                             'marginTop': '10px',
                             # 'color': 'white'
@@ -28,13 +28,46 @@ def tab_general_market_position():
                                          # value='Montreal',
                                          multi=True,
                                          placeholder="Продукт...",
-                                         id='product_select'
+                                         id='product_select',
+                                         optionHeight=50,
                                      )
                                  ]
                              )
                          ),
 
                      ]),
+            html.Hr(),
+
+            # в следующем блоке будут карточки
+            html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
+                            'marginTop': '10px',
+                            # 'color': 'white'
+                            },
+                     children=[
+                         dbc.Row([
+                             dbc.Col(width=3,
+                                 children=[
+                                     dbc.Card([
+                                         dbc.CardHeader("План-факт 2022, руб"),
+                                         dbc.CardBody([
+                                             html.P(className="card-title", id='card_plan_fact_tab_contract_value'),
+                                             html.P(className="card-text", id='card_plan_fact_tab_plan_value'),
+                                         ]),
+                                     ],
+                                         # color="light",
+                                         color="secondary",
+                                         outline=True
+
+                                         # inverse=True
+                                     )
+                                 ]),
+                             ]),
+                         ]
+                     ),
+
+
+
+
             # в следующем блоке будут графики
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
                             'marginTop': '10px',

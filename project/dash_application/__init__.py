@@ -189,9 +189,8 @@ def init_callbacks(dash_app):
     def deals_tab(product_select):
 
         # Обработчик инпута по продуктам
-        actual_sales_2022_df = dash_functions.actual_2022_sales(product_select)
-
-        fig = px.histogram(df_expected_sales,
+        expected_sales_df = dash_functions.expected_sales_by_products(product_select)
+        fig = px.histogram(expected_sales_df,
                            x="date",
                            y="Сумма платежа",
                            histfunc="sum",
@@ -237,7 +236,7 @@ def init_callbacks(dash_app):
             yaxis_title="Руб",
         )
 
-        next_payments_by_types_fig = px.histogram(df_expected_sales,
+        next_payments_by_types_fig = px.histogram(expected_sales_df,
                            x="date",
                            y="Сумма платежа",
                            histfunc="sum",

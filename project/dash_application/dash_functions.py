@@ -200,4 +200,25 @@ def donut_fact_2022_data(product_select):
     return donat_fact_labels, donat_fact_values
 
 
+def expected_sales_by_products(product_select):
+    sales_data_df = sales_data_source()
+    sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
+                                                             format="%Y-%m-%d")
+    sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
+    sales_data_df['date'] = sales_data_df['Дата получения платежа']
+    sales_data_df['payment'] = sales_data_df['Сумма платежа']
+
+
+    today = datetime.datetime.now()
+
+    full_product_list = product_select_full_list()
+    product_select_list = selector_content_list(product_select, full_product_list)
+    expected_sales_data_df = sales_data_df.loc[(sales_data_df['date'] >= today) &
+                                             (sales_data_df['Продукт'].isin(product_select_list))
+                                             ]
+    return expected_sales_data_df
+
+
+
+
 

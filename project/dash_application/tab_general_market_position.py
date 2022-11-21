@@ -15,7 +15,7 @@ def tab_general_market_position():
         children=[
             # в верхнем - фильтры
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
-                            'marginTop': '10px',
+                            'marginTop': '10px', 'marginBottom': '10px',
                             # 'color': 'white'
                             },
                      children=[
@@ -53,7 +53,7 @@ def tab_general_market_position():
 
             # в следующем блоке будут карточки
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
-                            'marginTop': '10px',
+                            'marginTop': '10px','marginBottom': '10px',
                             # 'color': 'white'
                             },
                      children=[
@@ -83,7 +83,7 @@ def tab_general_market_position():
 
             # в следующем блоке будут графики
             html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
-                            'marginTop': '10px',
+                            'marginTop': '10px', 'marginBottom': '10px',
                             # 'color': 'white'
                             },
                      children=[
@@ -115,13 +115,15 @@ def tab_general_market_position():
                          #
                          #         ])
                          # ]),
-                         html.Div(style={'paddingLeft': '30px', 'paddingRight': '20px',
-                                         'marginTop': '10px',
+                         html.Div(style={
+                             # 'paddingLeft': '30px',
+                             # 'paddingRight': '20px',
+                             'marginTop': '10px', 'marginBottom': '10px',
                                          # 'color': 'white'
                                          },
                                   children=[
                                       dbc.Row([
-                                          dbc.Col(
+                                          dbc.Col( style={'marginTop': '10px', 'marginBottom': '10px',},
                                               # width=6,
                                               children=[
                                                   dcc.Graph(
@@ -130,7 +132,7 @@ def tab_general_market_position():
                                                   ),
                                               ]
                                           ),
-                                          dbc.Col(
+                                          dbc.Col(style={'marginTop': '10px', 'marginBottom': '10px',},
                                               # width=6,
                                               children=[
                                                   dcc.Graph(

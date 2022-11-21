@@ -19,7 +19,7 @@ def tab_general_market_position():
                             # 'color': 'white'
                             },
                      children=[
-                         dbc.Row(
+                         dbc.Row([
                              dbc.Col(width=3,
                                  children=[
                                      dcc.Dropdown(
@@ -32,7 +32,20 @@ def tab_general_market_position():
                                          optionHeight=50,
                                      )
                                  ]
-                             )
+                             ),
+                             dbc.Col(width=3,
+                                     children=[
+                                         dcc.Dropdown(
+
+                                             options=product_categories_options,
+                                             # value='Montreal',
+                                             multi=True,
+                                             placeholder="Тип имущества",
+                                             id='product_type_select',
+                                             optionHeight=50,
+                                         )
+                                     ]
+                                     )]
                          ),
 
                      ]),

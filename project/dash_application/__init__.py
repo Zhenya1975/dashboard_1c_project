@@ -86,15 +86,31 @@ def create_dash_application(flask_app):
     dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
 
 
-    tab_temp = dcc.Tab(
-        label='Tab one',
-        value='general_market_position_temp',
+    tab_2 = dcc.Tab(
+        label='Обязательства',
+        value='loans_tab',
         children=[
             dcc.Graph(
                 figure={
                     'data': [
                         {'x': [1, 2, 3], 'y': [4, 1, 2],
                             'type': 'bar', 'name': 'SF'},
+                        {'x': [1, 2, 3], 'y': [2, 4, 5],
+                         'type': 'bar', 'name': u'Montréal'},
+                    ]
+                }
+            )
+        ])
+
+    tab_3 = dcc.Tab(
+        label='Денежные средства',
+        value='cash_tab',
+        children=[
+            dcc.Graph(
+                figure={
+                    'data': [
+                        {'x': [1, 2, 3], 'y': [4, 1, 2],
+                         'type': 'bar', 'name': 'SF'},
                         {'x': [1, 2, 3], 'y': [2, 4, 5],
                          'type': 'bar', 'name': u'Montréal'},
                     ]
@@ -114,7 +130,7 @@ def create_dash_application(flask_app):
                           dbc.Row([
                               dbc.Col(
                                   children=[
-                                      html.H3('DASHBOARD')
+                                      html.H3('Интерактивный дашборд')
                                   ]
                               )
                           ]),
@@ -127,7 +143,8 @@ def create_dash_application(flask_app):
                                   className='custom-tabs-container',
                                   children=[
                                       tab_general_market_position.tab_general_market_position(),
-                                      tab_temp,
+                                      tab_2,
+                                      tab_3
 
 
                                       # tab_deal.deal_tab(),

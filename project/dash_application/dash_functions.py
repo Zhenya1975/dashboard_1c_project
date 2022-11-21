@@ -101,6 +101,23 @@ def expected_2022_sales(product_select):
     return sales_data_2022_till_now_for_cumsum_df
 
 
+def product_types_select_content():
+    sales_data_df = sales_data_source()
+    sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
+                                                             format="%Y-%m-%d")
+    sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
+    sales_data_df['date'] = sales_data_df['Дата получения платежа']
+    sales_data_df['payment'] = sales_data_df['Сумма платежа']
+    # получаем список уникальных значений продуктовых категорий
+    product_types_categories = sales_data_df['Тип имущества'].unique()
+    product_categories_options = []
+    for product_type in product_types_categories:
+        temp_dict = {}
+        temp_dict['label'] = product_type
+        temp_dict['value'] = product_type
+        product_categories_options.append(temp_dict)
+    return product_categories_options
+
 def product_select_content():
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],

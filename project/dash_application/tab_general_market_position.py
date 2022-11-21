@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_application.dash_functions as dash_functions
 
 product_categories_options = dash_functions.product_select_content()
+product_type_options = dash_functions.product_types_select_content()
 
 
 def tab_general_market_position():
@@ -37,10 +38,10 @@ def tab_general_market_position():
                                      children=[
                                          dcc.Dropdown(
 
-                                             options=product_categories_options,
+                                             options=product_type_options,
                                              # value='Montreal',
                                              multi=True,
-                                             placeholder="Тип имущества",
+                                             placeholder="Тип имущества...",
                                              id='product_type_select',
                                              optionHeight=50,
                                          )

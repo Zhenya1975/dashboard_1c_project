@@ -95,7 +95,7 @@ def actual_2022_sales(product_select, product_type_select):
     # print(sales_data_2022_till_now_df)
     return sales_data_2022_till_now_df
 
-def expected_2022_sales(product_select):
+def expected_2022_sales(product_select, product_type_select):
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
                                                              format="%Y-%m-%d")
@@ -110,16 +110,22 @@ def expected_2022_sales(product_select):
     full_product_list = product_select_full_list()
     product_select_list = selector_content_list(product_select, full_product_list)
 
+    full_product_type_list = product_types_full_list()
+    product_type_select_list = selector_content_list(product_type_select, full_product_type_list)
+
     expected_sales_data_df = sales_data_df.loc[(sales_data_df['date'] >= today) &
                                                (sales_data_df['date'] <= last_day_2022) &
-                                               (sales_data_df['Продукт'].isin(product_select_list))
+                                               (sales_data_df['Продукт'].isin(product_select_list) &
+                                                (sales_data_df['Тип имущества'].isin(product_type_select_list))
+                                                )
                                                ]
 
     # получаем текущую накопленную сумму с 1 января по сегодня
     first_day_2022 = datetime.datetime(2022, 1, 1)
     sales_data_2022_till_now_df = sales_data_df.loc[(sales_data_df['date'] >= first_day_2022) &
                                                     (sales_data_df['date'] <= today) &
-                                                    (sales_data_df['Продукт'].isin(product_select_list))
+                                                    (sales_data_df['Продукт'].isin(product_select_list) &
+                                                     (sales_data_df['Тип имущества'].isin(product_type_select_list)))
                                                     ]
 
     current_sales_total = sales_data_2022_till_now_df['payment'].sum()

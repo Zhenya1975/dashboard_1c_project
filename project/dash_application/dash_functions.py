@@ -176,12 +176,28 @@ def sales_plan_2022(product_select):
 
 
 
-def donut_fact_2022_data():
+def donut_fact_2022_data(product_select):
     sales_data_df = sales_data_source()
     sales_data_df["Дата получения платежа"] = pd.to_datetime(sales_data_df["Дата получения платежа"],
                                                              format="%Y-%m-%d")
     sales_data_df.sort_values(by="Дата получения платежа", inplace=True)
     sales_data_df['date'] = sales_data_df['Дата получения платежа']
     sales_data_df['payment'] = sales_data_df['Сумма платежа']
+
+    first_day_2022 = datetime.datetime(2022, 1, 1)
+    today = datetime.datetime.now()
+
+
+    full_product_list = product_select_full_list()
+    product_select_list = selector_content_list(product_select, full_product_list)
+    actual_sales_data_df = sales_data_df.loc[(sales_data_df['date'] >= first_day_2022) &
+                                               (sales_data_df['date'] <= today) &
+                                               (sales_data_df['Продукт'].isin(product_select_list))
+                                               ]
+    actual_sales_data_groupped_df = actual_sales_data_df.groupby('Тип имущества', as_index=False)["payment"].sum()
+    donat_fact_labels = list(actual_sales_data_groupped_df['Тип имущества'])
+    donat_fact_values = list(actual_sales_data_groupped_df['payment'])
+    return donat_fact_labels, donat_fact_values
+
 
 

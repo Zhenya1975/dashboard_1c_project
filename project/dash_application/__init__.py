@@ -333,8 +333,10 @@ def init_callbacks(dash_app):
         ))
 
         ######## График pie_chart c данными факт на сегодня в разрезе типов #############
-        labels = ['Oxygen', 'Hydrogen', 'Carbon_Dioxide', 'Nitrogen']
-        values = [4500, 2500, 1053, 500]
+        fact_by_categories_data_df = dash_functions.donut_fact_2022_data(product_select)
+
+        labels = fact_by_categories_data_df[0]
+        values = fact_by_categories_data_df[1]
 
         fig_pie_fact_by_types = go.Figure(data=[go.Pie(labels=labels, values=values)])
 

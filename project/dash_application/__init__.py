@@ -185,8 +185,9 @@ def init_callbacks(dash_app):
                         Output('payments_fact_donat_by_types_graph', 'figure'),
                        ],
                       [Input('product_select', 'value'),
+                       Input('product_type_select', 'value')
                        ])
-    def deals_tab(product_select):
+    def deals_tab(product_select, product_type_select):
 
         # Обработчик инпута по продуктам
         expected_sales_df = dash_functions.expected_sales_by_products(product_select)
@@ -275,7 +276,7 @@ def init_callbacks(dash_app):
 
         ####### ГРАФИК ПЛАН-ФАКТ ########################
         payments_plan_fact_cumsum_fig = go.Figure()
-        payments_plan_fact_df = dash_functions.actual_2022_sales(product_select)
+        payments_plan_fact_df = dash_functions.actual_2022_sales(product_select, product_type_select)
         x = payments_plan_fact_df.loc[:, 'date']
         y = payments_plan_fact_df.loc[:, 'payment_cum']
 

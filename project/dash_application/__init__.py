@@ -14,6 +14,9 @@ from dash_bootstrap_templates import load_figure_template
 
 
 import dash_application.tab_general_market_position as tab_general_market_position
+import dash_application.tab_3 as tab_3
+
+
 import dash_application.dash_functions as dash_functions
 
 
@@ -102,21 +105,21 @@ def create_dash_application(flask_app):
             )
         ])
 
-    tab_3 = dcc.Tab(
-        label='Денежные средства',
-        value='cash_tab',
-        children=[
-            dcc.Graph(
-                figure={
-                    'data': [
-                        {'x': [1, 2, 3], 'y': [4, 1, 2],
-                         'type': 'bar', 'name': 'SF'},
-                        {'x': [1, 2, 3], 'y': [2, 4, 5],
-                         'type': 'bar', 'name': u'Montréal'},
-                    ]
-                }
-            )
-        ])
+    # tab_3 = dcc.Tab(
+    #     label='Денежные средства',
+    #     value='cash_tab',
+    #     children=[
+    #         dcc.Graph(
+    #             figure={
+    #                 'data': [
+    #                     {'x': [1, 2, 3], 'y': [4, 1, 2],
+    #                      'type': 'bar', 'name': 'SF'},
+    #                     {'x': [1, 2, 3], 'y': [2, 4, 5],
+    #                      'type': 'bar', 'name': u'Montréal'},
+    #                 ]
+    #             }
+    #         )
+    #     ])
 
 
     dash_app.layout = html.Div(
@@ -144,7 +147,7 @@ def create_dash_application(flask_app):
                                   children=[
                                       tab_general_market_position.tab_general_market_position(),
                                       tab_2,
-                                      tab_3
+                                      tab_3.tab_3_content()
 
 
                                       # tab_deal.deal_tab(),
@@ -174,8 +177,21 @@ def create_dash_application(flask_app):
     #             dash_app.server.view_functions[view_function]
     #         )
     init_callbacks(dash_app)
+    init_callbacks_tab_3(dash_app)
 
     return dash_app
+
+def init_callbacks_tab_3(dash_app):
+    @dash_app.callback(
+        Output("tab_3_graph", "figure"),
+        Input("checklist", "value"))
+    def update_line_chart(continents):
+        df = px.data.gapminder()  # replace with your own data source
+
+        mask = df.continent.isin(continents)
+        fig = px.line(df[mask],
+                      x="year", y="lifeExp", color='country')
+        return fig
 
 
 def init_callbacks(dash_app):

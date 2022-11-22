@@ -9,7 +9,7 @@ product_type_options = dash_functions.product_types_select_content()
 
 def tab_general_market_position():
     tab_general_block = dcc.Tab(
-        label='ПОЛОЖЕНИЕ КОМПАНИИ НА РЫНКЕ ЛИЗИНГА',
+        label='Рыночное положение',
         value='general_market_position',
         className='custom-tab',
         selected_className='custom-tab--selected',

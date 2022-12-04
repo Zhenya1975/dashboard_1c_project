@@ -5,6 +5,7 @@ import dash_application.dash_functions as dash_functions
 
 product_categories_options = dash_functions.product_select_content()
 product_type_options = dash_functions.product_types_select_content()
+agreement_status_options = dash_functions.next_payments_by_agreement_status_options()[0]
 
 
 def tab_1_content():
@@ -25,14 +26,22 @@ def tab_1_content():
                              dbc.Col(
                                      children=[
                                          html.Div([
-                                             html.H4('Информация о будущих платежах по договорам лизинга в разрезе статусов договора'),
-                                             dcc.Checklist(
-                                                 id="checklist_tab_1",
-                                                 options=["Asia", "Europe", "Africa", "Americas", "Oceania"],
-                                                 value=["Americas", "Oceania"],
-                                                 inline=True
+                                             # html.H4('Информация о будущих платежах по договорам лизинга в разрезе статусов договора'),
+                                             dcc.Dropdown(
+                                                 options=agreement_status_options,
+                                                 # value='Montreal',
+                                                 multi=True,
+                                                 placeholder="Статус договора...",
+                                                 id='agreement_status_select',
+                                                 optionHeight=50,
                                              ),
-                                             dcc.Graph(id="next_payments_by_agreement_status"),
+                                             html.Div(style={'marginTop': '10px'},
+                                                      children=[
+                                                          dcc.Graph(id="next_payments_by_agreement_status"),
+                                                      ]
+                                                      ),
+
+
 
                                          ])
 

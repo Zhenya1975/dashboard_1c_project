@@ -90,38 +90,6 @@ def create_dash_application(flask_app):
     dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
 
 
-    # tab_2 = dcc.Tab(
-    #     label='Обязательства',
-    #     value='loans_tab',
-    #     children=[
-    #         dcc.Graph(
-    #             figure={
-    #                 'data': [
-    #                     {'x': [1, 2, 3], 'y': [4, 1, 2],
-    #                         'type': 'bar', 'name': 'SF'},
-    #                     {'x': [1, 2, 3], 'y': [2, 4, 5],
-    #                      'type': 'bar', 'name': u'Montréal'},
-    #                 ]
-    #             }
-    #         )
-    #     ])
-
-    # tab_3 = dcc.Tab(
-    #     label='Денежные средства',
-    #     value='cash_tab',
-    #     children=[
-    #         dcc.Graph(
-    #             figure={
-    #                 'data': [
-    #                     {'x': [1, 2, 3], 'y': [4, 1, 2],
-    #                      'type': 'bar', 'name': 'SF'},
-    #                     {'x': [1, 2, 3], 'y': [2, 4, 5],
-    #                      'type': 'bar', 'name': u'Montréal'},
-    #                 ]
-    #             }
-    #         )
-    #     ])
-
 
     dash_app.layout = html.Div(
         dbc.Container(
@@ -147,8 +115,8 @@ def create_dash_application(flask_app):
                                   className='custom-tabs-container',
                                   children=[
                                       tab_1.tab_1_content(),
-                                      tab_general_market_position.tab_general_market_position(),
-                                      tab_3.tab_3_content()
+                                      # tab_general_market_position.tab_general_market_position(),
+                                      # tab_3.tab_3_content()
 
 
                                       # 4tab_deal.deal_tab(),
@@ -189,27 +157,33 @@ def init_callbacks_tab_1(dash_app):
             Output('next_payments_by_agreement_status', 'figure')
         ],
         [
-            Input('checklist_tab_1', 'value')
+            Input('agreement_status_select', 'value')
         ]
     )
-    def tab_1_content(test_input):
+    def tab_1_content(agreement_status_select):
+        measure_data = dash_functions.next_payments_by_status_data(agreement_status_select)[0]
+        x_data = dash_functions.next_payments_by_status_data(agreement_status_select)[1]
+        y_values = dash_functions.next_payments_by_status_data(agreement_status_select)[2]
+        text_data = dash_functions.next_payments_by_status_data(agreement_status_select)[3]
+        max_y_value = dash_functions.next_payments_by_status_data(agreement_status_select)[4]
         fig = go.Figure(go.Waterfall(
             name="Платежи",
             orientation="v",
-            measure=["relative", "relative", "relative", "relative", "relative", "total"],
-            x=["2022", "2023", "2024", "2025", "2026", "Всего"],
+            measure = measure_data,
+            x = x_data,
             textposition="outside",
-            text=["+60", "+80", "+20", "-40", "-20", "Total"],
-            y=[60, 80, 20, 10, 5, 0],
+            # text=["+60", "+80", "+20", "-40", "-20", "Total"],
+            text = text_data,
+            y = y_values,
             connector={"line": {"color": "rgb(63, 63, 63)"}},
         ))
 
         fig.update_layout(
             paper_bgcolor='WhiteSmoke',
             template='seaborn',
-            title="Profit and loss statement 2018",
+            title="Платежы по договорам лизинга в разрезе статусов договора",
             # showlegend=True
-            yaxis_range=[0, 200]
+            yaxis_range=[0, max_y_value]
         )
         return [fig]
 

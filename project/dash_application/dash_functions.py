@@ -4,10 +4,32 @@ from datetime import date, timedelta
 import pandas as pd
 from pathlib import Path
 import json
+import numpy as np
+import re
 
 project_folder = Path(__file__).resolve().parent.parent
 # print(project_folder)
 datafiles_path = str(project_folder) + '/datafiles'
+
+
+
+# подготовка данных для графика Информация о будущих платежах по договорам лизинга в разрезе статусов договора
+def next_payments_by_agreement_status_options():
+    next_payments_by_agreement_status_data = pd.read_csv(str(datafiles_path) + '/next_payments_by_agreement_status.csv')
+    agreement_status_list = list(next_payments_by_agreement_status_data['agreement_status'].unique())
+    agreement_status_options = []
+    agreements_status_list = []
+    for agreement_status in agreement_status_list:
+        agreements_status_list.append(agreement_status)
+        temp_dict = {}
+        temp_dict['label'] = agreement_status
+        temp_dict['value'] = agreement_status
+        agreement_status_options.append(temp_dict)
+    # print(agreement_status_options)
+    return agreement_status_options, agreements_status_list
+
+# next_payments_by_agreement_status()
+
 def sales_data_source():
     sales_data_source_df = pd.read_csv(str(datafiles_path) + '/next_payments_test_data_2.csv')
     return sales_data_source_df
@@ -62,6 +84,59 @@ def selector_content_list(input_from_select, full_selector_list):
     return result_select_list
 
 # выпекаем датафрейм, который отдаст накопленный результат продаж 2022 года
+def next_payments_by_status_data(agreement_status_select):
+    next_payments_by_agreement_status_data = pd.read_csv(str(datafiles_path) + '/next_payments_by_agreement_status.csv')
+    full_status_list = next_payments_by_agreement_status_options()[1]
+    product_select_list = selector_content_list(agreement_status_select, full_status_list)
+    next_payments_by_agreement_status_data_filtered = next_payments_by_agreement_status_data.loc[next_payments_by_agreement_status_data['agreement_status'].isin(product_select_list)]
+
+    next_payments_by_agreement_status_data_filtered['amount'].str.strip()
+    next_payments_by_agreement_status_data_filtered['amount_cleaned'] = next_payments_by_agreement_status_data_filtered['amount'].str.replace(" ", "")
+
+    # next_payments_by_agreement_status_data_filtered['amount'].apply(lambda x: re.sub("[^0-9]", "", str(x))).astype(int)
+    # print(next_payments_by_agreement_status_data_filtered)
+    next_payments_by_agreement_status_data_filtered['amount_cleaned'] = next_payments_by_agreement_status_data_filtered['amount_cleaned'].astype(float)
+    # print(next_payments_by_agreement_status_data_filtered.info())
+    # первый год в списке
+    first_year = next_payments_by_agreement_status_data_filtered['year'].min()
+    # последний год в списке
+    last_year = next_payments_by_agreement_status_data_filtered['year'].max()
+    # количество лет
+    number_of_bins = last_year - first_year + 2
+    measure_data = []
+    x_data = []
+    current_year = first_year
+    for bin in range(number_of_bins):
+        if (bin+1) != number_of_bins:
+            measure_data.append("relative")
+            x_data.append(str(current_year))
+            current_year = current_year + 1
+        else:
+            measure_data.append("total")
+            x_data.append('Всего')
+
+    next_payments_by_agreement_status_data_filtered_groupped = next_payments_by_agreement_status_data_filtered.groupby(['year'], as_index=False).agg({'amount_cleaned': 'sum'})
+
+    y_values_ = list(next_payments_by_agreement_status_data_filtered_groupped['amount_cleaned'])
+    text_data = y_values_
+
+    sum_of_values = next_payments_by_agreement_status_data_filtered_groupped['amount_cleaned'].sum()
+    text_data.append(sum_of_values)
+    myArray = np.array(text_data)
+    newArray = myArray / 1000
+    text_data = list(newArray)
+    text_data_k = []
+    for text in text_data:
+        text_upd = str(text) + " k"
+        text_data_k.append(text_upd)
+    max_y_value = sum_of_values*1.1
+    # text_data = ', '.join(map(str, text_data))
+    # print(list(text_data))
+
+    y_values_.append(0)
+
+    return measure_data, x_data, y_values_, text_data_k, max_y_value
+
 def actual_2022_sales(product_select, product_type_select):
     """расчет df для графика План-факт, ряд с фактическими продажами"""
 
@@ -81,8 +156,6 @@ def actual_2022_sales(product_select, product_type_select):
     product_select_list = selector_content_list(product_select, full_product_list)
     full_product_type_list = product_types_full_list()
     product_type_select_list = selector_content_list(product_type_select, full_product_type_list)
-    # print("product_type_select: ", product_type_select)
-    # print("product_type_select_list: ", product_type_select_list)
 
     sales_data_2022_till_now_filtered_df = sales_data_2022_till_now_df.loc[
             sales_data_2022_till_now_df['Продукт'].isin(product_select_list) &

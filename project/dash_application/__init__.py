@@ -14,6 +14,7 @@ from dash_bootstrap_templates import load_figure_template
 
 
 import dash_application.tab_general_market_position as tab_general_market_position
+import dash_application.tab_1 as tab_1
 import dash_application.tab_3 as tab_3
 
 
@@ -89,21 +90,21 @@ def create_dash_application(flask_app):
     dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
 
 
-    tab_2 = dcc.Tab(
-        label='Обязательства',
-        value='loans_tab',
-        children=[
-            dcc.Graph(
-                figure={
-                    'data': [
-                        {'x': [1, 2, 3], 'y': [4, 1, 2],
-                            'type': 'bar', 'name': 'SF'},
-                        {'x': [1, 2, 3], 'y': [2, 4, 5],
-                         'type': 'bar', 'name': u'Montréal'},
-                    ]
-                }
-            )
-        ])
+    # tab_2 = dcc.Tab(
+    #     label='Обязательства',
+    #     value='loans_tab',
+    #     children=[
+    #         dcc.Graph(
+    #             figure={
+    #                 'data': [
+    #                     {'x': [1, 2, 3], 'y': [4, 1, 2],
+    #                         'type': 'bar', 'name': 'SF'},
+    #                     {'x': [1, 2, 3], 'y': [2, 4, 5],
+    #                      'type': 'bar', 'name': u'Montréal'},
+    #                 ]
+    #             }
+    #         )
+    #     ])
 
     # tab_3 = dcc.Tab(
     #     label='Денежные средства',
@@ -141,12 +142,12 @@ def create_dash_application(flask_app):
                           html.Div([
                               dcc.Tabs(
                                   id="tabs-with-classes",
-                                  value='general_market_position',
+                                  value='tab_1',
                                   parent_className='custom-tabs',
                                   className='custom-tabs-container',
                                   children=[
+                                      tab_1.tab_1_content(),
                                       tab_general_market_position.tab_general_market_position(),
-                                      tab_2,
                                       tab_3.tab_3_content()
 
 
@@ -177,9 +178,41 @@ def create_dash_application(flask_app):
     #             dash_app.server.view_functions[view_function]
     #         )
     init_callbacks(dash_app)
+    init_callbacks_tab_1(dash_app)
     init_callbacks_tab_3(dash_app)
 
     return dash_app
+
+def init_callbacks_tab_1(dash_app):
+    @dash_app.callback(
+        [
+            Output('next_payments_by_agreement_status', 'figure')
+        ],
+        [
+            Input('checklist_tab_1', 'value')
+        ]
+    )
+    def tab_1_content(test_input):
+        fig = go.Figure(go.Waterfall(
+            name="Платежи",
+            orientation="v",
+            measure=["relative", "relative", "relative", "relative", "relative", "total"],
+            x=["2022", "2023", "2024", "2025", "2026", "Всего"],
+            textposition="outside",
+            text=["+60", "+80", "+20", "-40", "-20", "Total"],
+            y=[60, 80, 20, 10, 5, 0],
+            connector={"line": {"color": "rgb(63, 63, 63)"}},
+        ))
+
+        fig.update_layout(
+            paper_bgcolor='WhiteSmoke',
+            template='seaborn',
+            title="Profit and loss statement 2018",
+            # showlegend=True
+            yaxis_range=[0, 200]
+        )
+        return [fig]
+
 
 def init_callbacks_tab_3(dash_app):
     @dash_app.callback(

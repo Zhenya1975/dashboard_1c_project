@@ -151,7 +151,7 @@ def create_dash_application(flask_app):
                                       tab_3.tab_3_content()
 
 
-                                      # tab_deal.deal_tab(),
+                                      # 4tab_deal.deal_tab(),
                                       # tab_order.order_tab(),
 
                                   ]),

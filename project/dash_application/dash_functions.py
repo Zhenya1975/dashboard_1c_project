@@ -11,11 +11,22 @@ project_folder = Path(__file__).resolve().parent.parent
 # print(project_folder)
 datafiles_path = str(project_folder) + '/datafiles'
 
+next_payments_by_agreement_status_data = pd.read_csv(str(datafiles_path) + '/next_payments_by_agreement_status.csv')
+def next_payments_donat_chart_year_options_list():
+    year_list = list(next_payments_by_agreement_status_data['year'].unique())
+    year_options = []
+    for year in year_list:
+        temp_dict = {}
+        temp_dict['label'] = year
+        temp_dict['value'] = year
+        year_options.append(temp_dict)
+    return year_options
+
 
 
 # подготовка данных для графика Информация о будущих платежах по договорам лизинга в разрезе статусов договора
 def next_payments_by_agreement_status_options():
-    next_payments_by_agreement_status_data = pd.read_csv(str(datafiles_path) + '/next_payments_by_agreement_status.csv')
+
     agreement_status_list = list(next_payments_by_agreement_status_data['agreement_status'].unique())
     agreement_status_options = []
     agreements_status_list = []
@@ -106,10 +117,12 @@ def next_payments_by_status_data(agreement_status_select):
     measure_data = []
     x_data = []
     current_year = first_year
+    year_list = []
     for bin in range(number_of_bins):
         if (bin+1) != number_of_bins:
             measure_data.append("relative")
             x_data.append(str(current_year))
+            year_list.append(current_year)
             current_year = current_year + 1
         else:
             measure_data.append("total")
@@ -135,7 +148,7 @@ def next_payments_by_status_data(agreement_status_select):
 
     y_values_.append(0)
 
-    return measure_data, x_data, y_values_, text_data_k, max_y_value
+    return measure_data, x_data, y_values_, text_data_k, max_y_value, year_list
 
 def actual_2022_sales(product_select, product_type_select):
     """расчет df для графика План-факт, ряд с фактическими продажами"""

@@ -108,6 +108,7 @@ def create_dash_application(flask_app):
                           ]),
                           # добавляем следующий ряд, в который уложим табы
                           html.Div([
+
                               dcc.Tabs(
                                   id="tabs-with-classes",
                                   value='tab_1',

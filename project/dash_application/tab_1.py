@@ -6,7 +6,7 @@ import dash_application.dash_functions as dash_functions
 product_categories_options = dash_functions.product_select_content()
 product_type_options = dash_functions.product_types_select_content()
 agreement_status_options = dash_functions.next_payments_by_agreement_status_options()[0]
-
+year_options = dash_functions.next_payments_donat_chart_year_options_list()
 
 def tab_1_content():
     tab_1 = dcc.Tab(
@@ -23,7 +23,7 @@ def tab_1_content():
                             },
                      children=[
                          dbc.Row([
-                             dbc.Col(
+                             dbc.Col(width=9,
                                      children=[
                                          html.Div([
                                              # html.H4('Информация о будущих платежах по договорам лизинга в разрезе статусов договора'),
@@ -46,6 +46,19 @@ def tab_1_content():
                                          ])
 
                                      ]),
+                             dbc.Col(width=3,
+                                     children=[
+                                         dcc.Dropdown(
+                                             options=year_options,
+
+                                             multi=True,
+                                             placeholder="Год...",
+                                             id='agreement_year_select',
+                                             # optionHeight=50,
+                                         ),
+                                     ]
+
+                             )
 
                          ]),
 

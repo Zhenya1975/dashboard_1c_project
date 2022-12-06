@@ -19,21 +19,21 @@ services:
     build: project
     restart: always
     ports:
-      - "80:8060"
+      - "8000:8000"
 #    depends_on:
 #      - db
 
-#    networks:
-#      - flask_network
+    networks:
+      - flask_network
 
 
-#  proxy:
-#    build: proxy
-#    restart: always
-#    ports:
-#      - "8050:80"
-#    networks:
-#      - flask_network
+  proxy:
+    build: proxy
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - flask_network
 
 
 
@@ -50,8 +50,8 @@ services:
 #    volumes:
 #      - pgadmin-data:/var/lib/pgadmin
 
-#networks:
-#  flask_network:
+networks:
+  flask_network:
 #volumes:
 #  postgres_data:
 #  pgadmin-data:

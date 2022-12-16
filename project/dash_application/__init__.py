@@ -87,7 +87,7 @@ def create_dash_application(flask_app):
     dbc_css = (
         "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.1/dbc.min.css"
     )
-    dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/dash/", external_stylesheets=[url_theme1, dbc_css])
+    dash_app = dash.Dash(server=flask_app, name="Dashboard", url_base_pathname="/", external_stylesheets=[url_theme1, dbc_css])
 
 
 

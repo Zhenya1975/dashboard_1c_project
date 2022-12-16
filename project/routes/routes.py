@@ -81,8 +81,8 @@ def graphwindow():
     return render_template('graph_window.html', saved_data=saved_data)
 
 
-@home.route('/')
-def home_view():
+# @home.route('/')
+# def home_view():
     # request = requests.get('http://api.open-notify.org')
     # people = requests.get('http://api.open-notify.org/astros.json')
     # people_json = people.json()
@@ -98,7 +98,7 @@ def home_view():
     # for i in rhyme_json[0:3]:
         # print(i['word'])
 
-    return render_template('home.html')
+    # return render_template('home.html')
     # return render_template(request.text)
 
 @home.route('/graph_load_ajaxfile', methods=["POST", "GET"])
